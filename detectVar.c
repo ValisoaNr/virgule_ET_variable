@@ -3,7 +3,7 @@
 #include"action.h"
 #include"detectVar.h"
 
-#define TAILLE_LIGNE 100000
+#define TAILLE_LIGNE 1000
 #define MOT 50
 #define NB_VARMAX 20
 
