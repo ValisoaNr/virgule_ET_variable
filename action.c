@@ -41,9 +41,18 @@ void execute(int nbPara, char *argu[])
     //sortir si l'option n'est pas valable
     if(test!=0)
     {
-        printf("\tOption non valide !\n\n");
-        afficheAide(argu[0]);
-        exit (1);
+        if(argu[1][0]!='-')
+        {
+            printf("\tOption manquant !\n\n");
+            afficheAide(argu[0]);
+            exit (1);
+        }
+        else
+        {
+            printf("\tOption non valide !\n\n");
+            afficheAide(argu[0]);
+            exit (1);
+        }
     }
     
     //l'option est identifier en "i eme position" 
@@ -82,14 +91,16 @@ int repareLigne(char *ligne_c, FILE* pf_c)
         ignorer les commentaires
         petit modification de ligne pour eviter l'erreur printf("//non comm\n");
         suppression de l'entreGUIMENT
+        retourne le nombre de ligne sautee par le deplacement de pf_c
     */
 
-    int longLigne, posGUI, i, j, decalage;
+    int sautLigne, longLigne, posGUI, i, j, decalage;
     char avant, caractere;
     bool finComm;
     char *comm;
 
-    longLigne=strlen(ligne_c);
+    sautLigne = 0;
+    longLigne = strlen(ligne_c);
     for(i=0; i<=longLigne; i++)
     {
         if(ligne_c[i]=='"')
@@ -110,7 +121,7 @@ int repareLigne(char *ligne_c, FILE* pf_c)
         }
     }
     //enlever les cotes comme '\n' ou '\t',
-    longLigne=strlen(ligne_c);
+    longLigne = strlen(ligne_c);
     for(i=0; i<=longLigne; i++)
     {
         if(ligne_c[i]=='\'')
@@ -162,6 +173,10 @@ int repareLigne(char *ligne_c, FILE* pf_c)
             do
             {
                 caractere=fgetc(pf_c);
+                if(caractere == '\n')
+                {
+                    sautLigne++;
+                }
                 if((feof(pf_c)))
                 {
                     break;
@@ -179,9 +194,9 @@ int repareLigne(char *ligne_c, FILE* pf_c)
             while(!(finComm));
         }
     }
-    longLigne=strlen(ligne_c);
+    
 
-    return longLigne;
+    return sautLigne;
 }
 void afficheAide(char *para)
 {
